@@ -6,7 +6,7 @@ Users/participants have to record the exercise performed and send link with vide
 
 ## Index route
 Database
-![index_db](https://github.com/P4llix/ASProject/blob/main/docs/DB_index.PNG.png)
+![index_db](https://github.com/P4llix/ASProject/blob/main/docs/DB_index.PNG)
 
 Generated preview
 ![index](https://github.com/P4llix/ASProject/blob/main/docs/index.png)
