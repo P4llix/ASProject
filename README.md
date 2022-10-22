@@ -5,8 +5,8 @@ Main idea was to create website for gym contest. For entire year contest's admin
 Users/participants have to record the exercise performed and send link with video.
 
 ## Index route
-Database
+Database  
 ![index_db](https://github.com/P4llix/ASProject/blob/main/docs/DB_index.PNG)
 
-Generated preview
+Generated preview  
 ![index](https://github.com/P4llix/ASProject/blob/main/docs/index.png)
