@@ -151,30 +151,30 @@ return render_template(
     pagination = pagination
 )
 ```
-Pagination variable is used in Jinja (Flask templating engine) to generate details in html file
+Pagination variable is used in Jinja (Flask templating engine) to generate details in html file such as ```pagination.info``` and ```{{loop.index + pagination.skip}}``` for correct rows numbering
 ```
-    $${\color{red}{{pagination.info}}}$$
-    <div class="grid-item grid-item-2">
-        <table class="table table-hover">
-            <thead>
-              ...
-            </thead>
-            <tbody>
-              {% for user in users %}
-                <tr>
-                  <th scope="row">{{loop.index + pagination.skip}}</th>
-                  {# <th scope="row">{{user.ROWID}}</th> #}
-                  <td>{{user.FIRSTNAME}}</td>
-                  <td>{{user.LASTNAME}}</td>
-                  <td>{{user.PHONE}}</td>
-                  <td>{{user.BIRTHDAY}}</td>
-                  <td>{{user.EMAIL}}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {{pagination.links}}
-    </div>
+{{pagination.info}}
+<div class="grid-item grid-item-2">
+    <table class="table table-hover">
+        <thead>
+          ...
+        </thead>
+        <tbody>
+          {% for user in users %}
+            <tr>
+              <th scope="row">{{loop.index + pagination.skip}}</th>
+              {# <th scope="row">{{user.ROWID}}</th> #}
+              <td>{{user.FIRSTNAME}}</td>
+              <td>{{user.LASTNAME}}</td>
+              <td>{{user.PHONE}}</td>
+              <td>{{user.BIRTHDAY}}</td>
+              <td>{{user.EMAIL}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {{pagination.links}}
+</div>
 ```
 
 
