@@ -177,6 +177,15 @@ Pagination variable is used in Jinja (Flask templating engine) to generate detai
 </div>
 ```
 
+## CMS
+Main idea for this project is to let user create content for other users
+![cms](https://github.com/P4llix/ASProject/blob/main/docs/cms.PNG)
+
+There is few different thing that user can specify, all of them are connect
+![cms_task](https://github.com/P4llix/ASProject/blob/main/docs/cms_task.PNG)
+
+![cms_detail](https://github.com/P4llix/ASProject/blob/main/docs/cms_detail.PNG)
+
 
 
 
