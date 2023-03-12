@@ -58,13 +58,13 @@ def admin_required(f):
 ```
 
 ### Overview
-![user_administration](https://github.com/P4llix/ASProject/blob/main/docs/user_administartion.PNG)
+![user_administration](https://github.com/P4llix/ASProject/blob/main/docs/user_administration.PNG)
 
 ### User detail
-![user_administration_detail](https://github.com/P4llix/ASProject/blob/main/docs/user_administartion_detail.PNG)
+![user_administration_detail](https://github.com/P4llix/ASProject/blob/main/docs/user_administration_detail.PNG)
 
 ### User role
-![user_administration_role](https://github.com/P4llix/ASProject/blob/main/docs/user_administartion_role.PNG)
+![user_administration_role](https://github.com/P4llix/ASProject/blob/main/docs/user_administration_role.PNG)
 
 ## AJAX
 To use AJAX first we need to import library in base.html file
