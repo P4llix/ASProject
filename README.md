@@ -128,4 +128,56 @@ success: function(data){
 ```
 I can overwerite existing fields with new values
 
+## Pagination
+Pagination is used in user managment page
+![pagination](https://github.com/P4llix/ASProject/blob/main/docs/pagination.PNG)
+
+Pagination details
+```
+per_page = 10
+if page != None:
+    x = (int(page) - 1) * per_page
+    y = int(page) * per_page
+
+pagination = Pagination(page=page, total=len(all_users), search=False, record_name='users')
+```
+
+```x``` and ```y``` values are used to send different indexes of users in return
+```
+return render_template(
+    'administration_user.html', 
+    user = user, 
+    users = all_users[x:y],
+    pagination = pagination
+)
+```
+Pagination variable is used in Jinja (Flask templating engine) to generate details in html file
+```
+    `#f03c15`{{pagination.info}}
+    <div class="grid-item grid-item-2">
+        <table class="table table-hover">
+            <thead>
+              ...
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <th scope="row">{{loop.index + pagination.skip}}</th>
+                  {# <th scope="row">{{user.ROWID}}</th> #}
+                  <td>{{user.FIRSTNAME}}</td>
+                  <td>{{user.LASTNAME}}</td>
+                  <td>{{user.PHONE}}</td>
+                  <td>{{user.BIRTHDAY}}</td>
+                  <td>{{user.EMAIL}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {{pagination.links}}
+    </div>
+```
+
+
+
+
 
