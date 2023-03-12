@@ -189,4 +189,5 @@ There is few different thing that user can specify, all of them are connect
 While user create daily task he can choose which users he want to assign 
 ![user_list](https://github.com/P4llix/ASProject/blob/main/docs/user_list.png)
 
-
+After creating new daily task it will show in index page ("/" route)
+![relation](https://github.com/P4llix/ASProject/blob/main/docs/relation.png)
