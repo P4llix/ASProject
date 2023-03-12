@@ -186,7 +186,7 @@ There is few different thing that user can specify, all of them are connect
 
 ![cms_detail](https://github.com/P4llix/ASProject/blob/main/docs/cms_detail.png)
 
-
-
+While user create daily task he can choose which users he want to assign 
+![user_list](https://github.com/P4llix/ASProject/blob/main/docs/user_list.png)
 
 
