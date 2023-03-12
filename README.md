@@ -153,7 +153,7 @@ return render_template(
 ```
 Pagination variable is used in Jinja (Flask templating engine) to generate details in html file
 ```
-    `#f03c15`{{pagination.info}}
+    $${\color{red}{{pagination.info}}}$$
     <div class="grid-item grid-item-2">
         <table class="table table-hover">
             <thead>
