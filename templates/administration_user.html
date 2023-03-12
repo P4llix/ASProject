@@ -1,0 +1,311 @@
+{% extends "home_base.html" %}
+
+
+{% block title %} 
+⚙️ Admin - User
+{% endblock %}
+
+
+{% block flashes %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% include "flash.html" %}
+    {% endif %}
+    {% endwith %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="grid-item grid-item-6 p-2">
+        <button type="button" class="btn btn-success" id="show_insert_modal">Dodaj użytkownika</button>
+    </div>
+
+
+    {{pagination.info}}
+    <div class="grid-item grid-item-2">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Imie</th>
+                <th scope="col">Nazwisko</th>
+                <th scope="col">Telefon</th>
+                <th scope="col">Urodziny</th>
+                <th scope="col">Email</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+              <tr>
+                <th scope="row">{{loop.index + pagination.skip}}</th>
+                {# <th scope="row">{{user.ROWID}}</th> #}
+                <td>{{user.FIRSTNAME}}</td>
+                <td>{{user.LASTNAME}}</td>
+                <td>{{user.PHONE}}</td>
+                <td>{{user.BIRTHDAY}}</td>
+                <td>{{user.EMAIL}}</td>
+
+                <td>
+                    {% if user.STATUS %}
+                        <span class="badge bg-success">Aktywny</span>
+                    {% else %}
+                        <span class="badge bg-danger">Nie aktywny</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a class="btn btn-primary bg-primary modify" data-userid="{{user.ROWID}}">
+                        <i class="fas fa-wrench"></i>
+                    </a>
+                </td>
+
+                <td>
+                    <a class="btn btn-primary bg-primary check-role" data-userid="{{user.ROWID}}">
+                        Role
+                    </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {{pagination.links}}
+    </div>
+
+    <!-- detail popup  -->
+    <div class="modal fade" id="modal_pop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edycja użytkownika</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-content">
+                <div class="input-group input-group-sm mb-4" style="display:none">
+                    <span class="input-group-text" id="rowid">ID</span>
+                    <input type="text"  class="form-control" id="userUserid" aria-label="Sizing example input" aria-describedby="rowid" value="" disabled>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text" id="firstname">Imie</span>
+                    <input type="text" id="userImie" class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value="">
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text" id="firstname">Nazwisko</span>
+                    <input type="text" id="userNazwisko" class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value="">
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text" id="firstname">Telefon</span>
+                    <input type="text" id="userTelefon" class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value="">
+                </div>      
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text" id="firstname">Email</span>
+                    <input type="text" id="userEmail" class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value="">
+                </div>        
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text" id="firstname">Status</span>
+                    <label class="mx-3 switch"><input type="checkbox" id="userStatus" ></label>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text" id="firstname">Urodziny</span>
+                    <input type="date" id="userUrodziny" name="birthday" value="">
+                </div>                  
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger user-remove" data-bs-dismiss="modal">Usuń</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success save">Zapisz zmiany</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- insert popup -->
+    <div class="modal fade" id="modal_insert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Dodawanie użytkownika</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">Imie</span>
+                        <input type="text" id='insertImie' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                    </div>
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">Nazwisko</span>
+                        <input type="text" id='insertNazwisko' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                    </div>
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">E-mail</span>
+                        <input type="text" id='insertEmail' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                    </div>
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">Telefon</span>
+                        <input type="text" id='insertTelefon' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                    </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-primary insert-save">Dodaj użytkownika</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Role popup -->
+    <div class="modal fade" id="modal_role" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Role użytkownika</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-role">
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">User</span>
+                        <input id='roleUser' type="checkbox">
+                    </div>
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">Moderator</span>
+                        <input id='roleModerator' type="checkbox">
+                    </div>
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">Admin</span>
+                        <input id='roleAdmin' type="checkbox">
+                    </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success role-save">Aktualizuj role</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <!-- ajax -->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.modify').click(function(){
+                $.ajax({
+                    url: '/api/user/get',
+                    type: 'post',
+                    data: {
+                        userid: $(this).data('userid')
+                    },
+                    success: function(data){
+                        $('#userUserid').val(data[0]);
+                        $('#userImie').val(data[1]);
+                        $('#userNazwisko').val(data[2]);
+                        $('#userTelefon').val(data[3]);
+                        $('#userEmail').val(data[4]);
+                        $('#userStatus').prop("checked", data[5]);
+                        $('#userUrodziny').val(data[6]);
+                        $('#modal_pop').modal('show');
+                    }
+                });
+            });
+
+
+            $('.save').click(function(){
+                $.ajax({
+                    url: '/api/user/update',
+                    type: 'post',
+                    data: {
+                        userid: $('#userUserid').val(),
+                        userimie: $('#userImie').val(),
+                        usernazwisko: $('#userNazwisko').val(),
+                        usertelefon: $('#userTelefon').val(),
+                        userurodziny: $('#userUrodziny').val(),
+                        useremail: $('#userEmail').val(),
+                        userstatus: $("#userStatus").is(":checked") ? 1 : 0
+                    },
+                    success: function(data){
+                        $('#modal_pop').modal('hide');
+                        location.reload();
+                    }
+                });
+            });
+
+
+            $('.insert-save').click(function(){
+                $.ajax({
+                    url: '/api/user/add',
+                    type: 'post',
+                    data: {
+                        userimie: $('#insertImie').val(),
+                        usernazwisko: $('#insertNazwisko').val(),
+                        usertelefon: $('#insertTelefon').val(),
+                        useremail: $('#insertEmail').val()
+                    },
+                    success: function(data){
+                        $('#modal_insert').modal('hide');
+                        location.reload();
+                    },
+                    error: function(request, status, error){
+                        alert(request.responseJSON.message);
+                    }
+                });
+            });
+
+
+            $('#show_insert_modal').click(function(){
+                $('#insertImie').val(''),
+                $('#insertNazwisko').val(''),
+                $('#insertTelefon').val(''),
+                $('#insertEmail').val('')
+                $('#modal_insert').modal('show');
+            });
+
+
+            $('.check-role').click(function(){
+                $.ajax({
+                    url: '/api/role/get',
+                    type: 'post',
+                    data: {
+                        userid: $(this).data('userid')
+                    },
+                    success: function(data){
+                        $('.modal-body-role').html(data);
+                        $('#modal_role').modal('show');
+                    }
+                });
+            });
+
+            $('.role-save').click(function(){
+                $.ajax({
+                    url: '/api/role/update',
+                    type: 'post',
+                    data: {
+                        userid: $('#userid').val(),
+                        statusUser: $("#userRoleUSER").is(":checked") ? 1 : 0,
+                        statusMod: $("#userRoleMOD").is(":checked") ? 1 : 0,
+                        statusAdmin: $("#userRoleADMIN").is(":checked") ? 1 : 0
+                    },
+                    success: function(data){
+                        $('#modal_role').modal('hide');
+                        location.reload();
+                    }
+                });
+            });
+
+            $('.user-remove').click(function(){
+                $.ajax({
+                    url: '/api/user/remove',
+                    type: 'post',
+                    data: {
+                        userid: $('#userUserid').val(),
+                    },
+                    success: function(data){
+                        $('#modal_role').modal('hide');
+                        location.reload();
+                    }
+                });
+            });
+
+        });
+    
+    </script>
+{% endblock %}

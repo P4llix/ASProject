@@ -26,83 +26,6 @@ body{
     color: black;
 }
 
-/* 
-.flatron{
-    background-color: #2c3e50;
-    color: white;
-    text-align: center;
-    padding: 5% 10%;
-}
-
-.flatron p{
-    font-size: 500%;
-} */
-
-/* .actual{ */
-    /* width: 40vw; */
-    /* margin: 3% auto; */
-    /* text-align: center; */
-/* } */
-/*  */
-/* .card{ */
-    /* background-color: transparent; */
-    /* border: 2px solid #8e44ad; */
-/* } */
-/*  */
-/* .card-header{ */
-    /* font-size: 300%; */
-/* } */
-/*  */
-/* .card-body{ */
-    /* padding: 0; */
-/* } */
-/*  */
-/* .first, .second{ */
-    /* width: 50%; */
-    /* float: left; */
-    /* transition: .4s; */
-    /* padding: 16px; */
-/* } */
-/*  */
-/* .first:hover, .second:hover{ */
-    /* background-color: #2973a3; */
-/* } */
-/*  */
-/* .count{ */
-    /* font-size: 200%; */
-/* } */
-/*  */
-/* .second{ */
-    /* border-left: 2px solid #8e44ad; */
-/* } */
-/*  */
-/* .previous{ */
-    /* width: 30vw; */
-    /* margin: 0 auto; */
-    /* text-align: center; */
-/* } */
-/*  */
-/* .previous .card{ */
-    /* margin-bottom: 20px !important; */
-/*  */
-/* } */
-/*  */
-/* .clip-star { */
-    /* background: gray; */
-    /* clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); */
-    /* display: inline-block; */
-    /* height: 20px; */
-    /* width: 20px; */
-  /* } */
-/*  */
-/* .check { */
-    /* background: gold; */
-  /* } */
-/*  */
-/* .table thead tr th{ */
-    /* cursor: pointer; */
-/* } */
-/*  */
 .main-login{
     margin: 0 auto;
     width: 25vw;
@@ -111,11 +34,9 @@ body{
 }
 
 .main-login .form-control{
-    /* padding: 2%; */
     border-radius: 15px;
     text-align: center;
     background-color: transparent;
-    /* border: 2px solid white; */
     color: white;
 }
 
@@ -132,3 +53,18 @@ body{
     border: none !important;
     padding: 10px 25px;
 }
+
+.flashes{
+    position: absolute;
+    text-align: center;
+    background-color: #e09f3e;
+    color: black;
+    border: none;
+}
+
+.hello{
+    text-align: center;
+    background-color: #0d1b2a;
+    color:white;
+}
+

@@ -1,0 +1,101 @@
+{% extends "home_base.html" %}
+
+
+{% block title %} 
+📚 Archiwum
+{% endblock %}
+
+
+{% block flashes %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% include "flash.html" %}
+    {% endif %}
+    {% endwith %}
+{% endblock %}
+
+{% block content %}
+<div class="grid-item grid-item-7">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-8 text-center">
+                <h3>Archiwum</h3>
+            </div>
+            <hr>
+        </div>
+        <div class="row justify-content-left">
+            <table class="table table-hover" style="overflow-y:scroll">
+                <tr>
+                    <td>Data</td>
+                    <td>Ćwiczenie</td>
+                    <td>Ocena</td>
+                    <td>Sędzia</td>
+                    <td>Komentarz</td>
+                    <td>Link</td>
+                </tr>
+                {% for row in rows %}
+                <tr>
+                    <td><h5 class="" >{{row.DATE}}</h5></td>
+                    <td><h5 class="" >{{row.EXERCISE_NAME}} {{row.QUANTITY}} [{{row.UNIT}}]</h5></td>
+                    <td><h5 class="" >{{row.MARK}}</h5></td>
+                    <td><h5 class="" >{{row.FIRSTNAME}} {{row.LASTNAME}}</h5></td>
+                    <td><h5 class="" >{{row.COMMENT}}</h5></td>
+                    <td><h5 class="showlink" onClick="openModal('{{row.LINK}}', {{row.USER}}, {{row.ROWID}})" data-dailyid="{{row.ROWID}}">{{row.LINK}}</h5></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+    <!-- link popup -->
+    <div class="modal fade" id="modal_link" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edycja linku</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="updateuserid" style="display:none" value=''>
+                <input type="text" id="updatedailyid" style="display:none" value=''>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Link</span>
+                    <input type="text" id='updateLink' class="form-control" aria-label="Sizing example input" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success link-update">Zapisz</button>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- ajax -->
+<script type="text/javascript">
+
+        function openModal(link, userid, dailyid) {
+            $('#updateLink').val(link);
+            $('#updateuserid').val(userid);
+            $('#updatedailyid').val(dailyid);
+            $('#modal_link').modal('show');
+
+        }
+    $(document).ready(function(){
+        $('.link-update').click(function(){
+                $.ajax({
+                    url: '/api/daily/link/update',
+                    type: 'post',
+                    data: {
+                        link: $('#updateLink').val(),
+                        userid: $('#updateuserid').val(),
+                        dailyid: $('#updatedailyid').val()
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_task_detail').modal('hide');
+                    }
+                });
+            });
+    });
+</script>
+{% endblock %}

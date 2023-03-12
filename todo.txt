@@ -1,0 +1,57 @@
++ index
+    + wyswietlanie daily zadan
+    - wyswietlanie tabeli od zadania
+        + ajax
+        + przykłady
+
+- home
+    ? statystyki
+
++ mod
+    + ocena zadania
+
++ admin
+    + ocena zadania
+    + management-daily
+        + dodawanie taska
+        + dodawanie jednostki
+        + dodawanie cwiczenia
+    + management-user
+        + dodawanie uzytkownika
+        + dodawanie roli
+
+
+
+/api
+    /user
+        /update
+        /add
+        /get
+        /remove
+    /daily
+        /get
+    /role
+        /get
+        /update
+    /unit
+        /insert
+    /exercise
+        /insert
+        /get
+        /update
+    /task
+        /insert
+        /get
+        /update
+
+    
+
+/
+/home
+/login
+/home
+    /admin
+        /task
+        /user
+/logout
+

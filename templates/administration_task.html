@@ -1,0 +1,579 @@
+{% extends "home_base.html" %}
+
+
+{% block title %} 
+⚙️ Admin - Task
+{% endblock %}
+
+
+{% block flashes %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% include "flash.html" %}
+    {% endif %}
+    {% endwith %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="grid-item grid-item-3">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center">
+                    <h3>Zadania</h3>
+                </div>
+                <hr>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-8">
+                    <a class="btn btn-primary bg-primary new-task">
+                        Dodaj
+                    </a>
+                </div>
+                <div class="col-8">
+                    <table class="table table-hover" style="overflow-y:scroll">
+                        {% for task in tasks %}
+                        <tr>
+                            <td><h5 class="show-task-details" data-taskid="{{task.ROWID}}">{{task.EXERCISE_NAME}} {{task.QUANTITY}} [{{task.UNIT_NAME}}]</h5></td>
+                            <td><i class="fa fa-remove"></i></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-item grid-item-4">
+            <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center">
+                    <h3>Przypisane zadanie (daily)</h3>
+                </div>
+                <hr>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-8">
+                    <table class="table table-hover" style="overflow-y:scroll">
+                        {% for daily in daily_tasks %}
+                        <tr>
+                            <td><h5 class="daily-details" data-dailyid="{{daily.ROWID}}">{{daily.DATE}} - {{daily.EXERCISE_NAME}} {{daily.QUANTITY}} [{{daily.UNIT_NAME}}]</h5></td>
+                        </tr>
+                        {% endfor %}
+                        {{pagination.links}}
+                    </table>
+                </div>
+                <div class="col-4">
+                    <a class="btn btn-primary bg-primary new_daily">
+                        Dodaj
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-item grid-item-1">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center">
+                    <h3>Jednostki</h3>
+                </div>
+                <hr>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-6 ">
+                    <table class="table table-hover" style="overflow-y:scroll">
+                        {% for unit in units %}
+                        <tr>
+                            <td><h5>{{unit.NAME}}</h5></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="col-6">
+                    <a class="btn btn-primary bg-primary new-unit">
+                        Dodaj
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="grid-item grid-item-1">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center">
+                    <h3>Ćwiczenia</h3>
+                </div>
+                <hr>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-6">
+                    <table class="table table-hover" style="overflow-y:scroll">
+                        {% for exercise in exercises %}
+                        <tr>
+                            <td><h5 class="show-details" data-exerciseid="{{exercise.ROWID}}">{{exercise.NAME}}</h5></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="col-6">
+                    <a class="btn btn-primary bg-primary new-exercise">
+                        Dodaj
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- unit popup -->
+    <div class="modal fade" id="modal_unit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Nowa jednostka</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Jednostka</span>
+                    <input type="text" id='insertJednostka' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success unit-add">Dodaj jednostkę</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- exercise popup -->
+    <div class="modal fade" id="modal_exercise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Nowe ćwiczenie</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Nazwa</span>
+                    <input type="text" id='insertNazwa' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Opis</span>
+                    <input type="text" id='insertOpis' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Link</span>
+                    <input type="text" id='insertLink' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" id="buttonModal" class="btn btn-success">Dodaj ćwiczenie</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- exercise detail popup -->
+    <div class="modal fade" id="modal_exercise_detail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Ćwiczenie szczegóły</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-content">
+                <input type="text" id="updateIdExercise" style="display:none" value="">
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Nazwa</span>
+                    <input type="text" id='updateNazwa' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Opis</span>
+                    <input type="text" id='updateOpis' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Link</span>
+                    <input type="text" id='updateLink' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success exercise-update">Zapisz</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- new task popup -->
+    <div class="modal fade" id="modal_task_new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Nowe zadanie</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-content">
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Ćwiczenie</span>
+                    <select class="form-select" id='insertExercise'>
+                        {% for exercise in exercises %}
+                            <option value="{{exercise.ROWID}}">{{exercise.NAME}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Ilość</span>
+                    <input type="text" id='insertQuantity' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Jednostka</span>
+                    <select class="form-select" id='insertUnit'>
+                        {% for unit in units %}
+                            <option value="{{unit.ROWID}}">{{unit.NAME}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Komentarz</span>
+                    <input type="text" id='insertComment' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success task-insert">Dodaj</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- task detail popup -->
+    <div class="modal fade" id="modal_task_detail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Zadanie szczegóły</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="updateIdTask" style="display:none" value=''>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Ćwiczenie</span>
+                    <select class="form-select" id='updateExercise'>
+                        {% for exercise in exercises %}
+                            <option value="{{exercise.ROWID}}">{{exercise.NAME}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Ilość</span>
+                    <input type="text" id='updateQuantity' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Jednostka</span>
+                    <select class="form-select" id='updateUnit'>
+                        {% for unit in units %}
+                            <option value="{{unit.ROWID}}">{{unit.NAME}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Komentarz</span>
+                    <input type="text" id='updateComment' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success task-update">Zaktualizuj</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- new daily popup -->
+    <div class="modal fade" id="modal_daily_task" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Zadanie szczegóły</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="insertDailyId" style="display:none" value=''>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Zadanie</span>
+                    <select class="form-select" id='insertDailyTask'>
+                        {% for task in tasks %}
+                            <option value="{{task.ROWID}}">{{task.EXERCISE_NAME}} {{task.QUANTITY}} [{{task.UNIT_NAME}}]</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Komentarz</span>
+                    <input type="text" id='insertDailyComment' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Data</span>
+                    <input type="date" id="insertDailyDate" autocomplete="off">
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Uczestnicy</span>
+                    <button type="button" class="btn btn-secondary show-users">Dodaj</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+              <button type="button" class="btn btn-success daily-insert">Dodaj</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- user list popup -->
+    <div class="modal fade" id="modal_users" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Lista uczestników</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="updateIdTask" style="display:none" value=''>
+                <div class="input-group input-group-sm mb-4">
+                    <table class="table table-bordered" style="overflow-y:scroll" id="dailyUsers">
+                    </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+              <button type="button" class="btn btn-success user-save">Zapisz</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var UserList = [];
+            var mode = 0;
+
+            $('.unit-add').click(function(){
+                $.ajax({
+                    url: '/api/unit/insert',
+                    type: 'post',
+                    data: {
+                        unit_name: $('#insertJednostka').val()
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_unit').modal('hide');
+                    }
+                });
+            });
+
+            $('.new-unit').click(function(){
+                $('#modal_unit').modal('show');
+            });
+
+            $('#buttonModal').click(function(){
+                $.ajax({
+                    url: '/api/exercise/insert',
+                    type: 'post',
+                    data: {
+                        name: $('#insertNazwa').val(),
+                        desc: $('#insertOpis').val(),
+                        link: $('#insertLink').val()
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_exercise').modal('hide');
+                    }
+                });
+            });
+
+            $('.new-exercise').click(function(){
+                $('#modal_exercise').modal('show');
+            });
+
+            $('.show-details').click(function(){
+                $.ajax({
+                    url: '/api/exercise/get',
+                    type: 'post',
+                    data: {
+                        id: $(this).data('exerciseid')
+                    },
+                    success: function(data){
+                        $('#updateIdExercise').val(data[0]);
+                        $('#updateNazwa').val(data[1]);
+                        $('#updateOpis').val(data[2]);
+                        $('#updateLink').val(data[3]);
+                        $('#modal_exercise_detail').modal('show');
+                    }
+                });
+            });
+
+            $('.exercise-update').click(function(){
+                $.ajax({
+                    url: '/api/exercise/update',
+                    type: 'post',
+                    data: {
+                        id: $('#updateIdExercise').val(),
+                        nazwa: $('#updateNazwa').val(),
+                        opis: $('#updateOpis').val(),
+                        link: $('#updateLink').val()
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_exercise_detail').modal('hide');
+                    }
+                });
+            });
+
+            $('.new-task').click(function(){
+                $('#insertExercise').val('');
+                $('#insertQuantity').val('');
+                $('#insertComment').val('');
+                $('#insertUnit').val('');
+                $('#modal_task_new').modal('show');
+            });
+
+            $('.task-insert').click(function(){
+                $.ajax({
+                    url: '/api/task/insert',
+                    type: 'post',
+                    data: {
+                        exercise: $('#insertExercise').val(),
+                        quantity: $('#insertQuantity').val(),
+                        comment: $('#insertComment').val(),
+                        unit: $('#insertUnit').val()
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_exercise_detail').modal('hide');
+                    }
+                });
+            });
+
+
+            $('.show-task-details').click(function(){
+                $.ajax({
+                    url: '/api/task/get',
+                    type: 'post',
+                    data: {
+                        taskid: $(this).data('taskid')
+                    },
+                    success: function(data){ 
+                        {# $('#updateIdTask').attr('value', JSON.stringify(data[0])); #}
+                        $('#updateIdTask').val(data[0]);
+                        $('#updateExercise').val(data[1]);
+                        $('#updateQuantity').val(data[2]);
+                        $('#updateComment').val(data[3]);
+                        $('#updateUnit').val(data[4]);
+                        $('#modal_task_detail').modal('show');
+                    }
+                });
+            });
+
+
+            $('.task-update').click(function(){
+                $.ajax({
+                    url: '/api/task/update',
+                    type: 'post',
+                    data: {
+                        taskid: document.getElementById("updateIdTask").value,
+                        exercise: $('#updateExercise').val(),
+                        quantity: $('#updateQuantity').val(),
+                        unit: $('#updateUnit').val(),
+                        comment: $('#updateComment').val()
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_task_detail').modal('hide');
+                    }
+                });
+            });
+
+            $('.new_daily').click(function(){
+                mode = 0;
+                $('#insertDailyTask').val('');
+                $('#insertDailyComment').val('');
+                $('#insertDailyDate').val('');
+                $('#insertDailyId').val('');
+                $('.daily-insert').text('Dodaj');
+                $('#modal_daily_task').modal('show');
+            });
+
+
+            $('.daily-insert').click(function(){
+                $.ajax({
+                    url: '/api/daily/insert',
+                    type: 'post',
+                    data: {
+                        task: $('#insertDailyTask').val(),
+                        comment: $('#insertDailyComment').val(),
+                        date: $('#insertDailyDate').val(),
+                        users: userList.join(';'),
+                        author: {{user.rowid}},
+                        mode: mode,
+                        dailyid: $('#insertDailyId').val(),
+                    },
+                    success: function(data){
+                        location.reload();
+                        $('#modal_daily_task').modal('hide');
+                    },
+                    error: function(request, status, error){
+                        alert(request.responseJSON.message);
+                    }
+                });
+
+            });
+
+
+            $('.show-users').click(function(){
+                $.ajax({
+                    url: '/api/daily/users',
+                    type: 'post',
+                    data: {},
+                    success: function(data){
+                        $('#dailyUsers').html(data);
+                        $('#modal_users').modal('show');
+                    },
+                });
+            });
+
+
+            $('.user-save').click(function(){
+                userList = $("input:checkbox:checked").map(function(){
+                                    return this.value;
+                                }).toArray();
+                $('#modal_users').modal('hide');
+            });
+
+
+            $('.daily-details').click(function(){
+                mode = 1;
+                $.ajax({
+                    url: '/api/daily/detail',
+                    type: 'post',
+                    data: {
+                        dailyid: $(this).data('dailyid')
+                    },
+                    success: function(data){
+
+                        $('#insertDailyTask').val(data[0]);
+                        $('#insertDailyDate').val(data[1]);
+                        $('#insertDailyComment').val(data[2]);
+                        $('#insertDailyId').val(data[3]);
+                        $('.daily-insert').text('Zapisz');
+                        $('#modal_daily_task').modal('show');
+                    },
+                });
+            });
+
+
+
+        });
+    
+    </script>
+{% endblock %}

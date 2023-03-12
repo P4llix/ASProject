@@ -1,0 +1,31 @@
+/* #706fd3
+#353564 */
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(228, 228, 228);
+    font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
+}
+button:focus, a:focus
+{
+         outline: none !important;
+         text-decoration: none !important;
+         box-shadow: none !important;
+}
+.text-zadanie{
+    margin: 20px;
+}
+.card-title{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+}
+.jumbotron{
+    background-color: #706fd3;
+    color: white; 
+}
+.general-text{
+    display: flex;
+    justify-content: center;
+}

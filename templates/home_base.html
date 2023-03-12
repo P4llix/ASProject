@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    {% block head %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+<section class="side-menu" id="side">
+    <nav class="sidebar">
+        <h1>DmavChall</h1>
+        <a href="{{url_for('home')}}" class="sidebar-items"><i class="fas fa-home"></i>Dashboard</a>
+        <a href="{{url_for('archive')}}" class="sidebar-items"><i class="fas fa-list"></i>Archiwum</a>
+        {% if user.roles['MOD'] %}
+            <a href="{{url_for('moderation_mark')}}" class="sidebar-items"><i class="fas fa-book"></i>Oceny</a>
+        {% endif %}
+        {% if user.roles['ADMIN'] %}
+            <a href="{{url_for('administration_task')}}" class="sidebar-items"><i class="fas fa-calendar"></i>Daily Task</a>
+            <a href="{{url_for('administration_user')}}" class="sidebar-items"><i class="fas fa-users"></i>Użytkownicy</a>
+        {% endif %}
+    </nav>
+</section>
+{% block flashes %}{% endblock %}
+<header>
+    <div class="navbar" id="nav">
+        <div class="navbar-container">
+            <div class="sign">
+                <div class="sign-img">
+                    <a href="{{url_for('logout')}}">
+                        <span class="sign-text">Wyloguj się </span>
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+</header>
+<section>
+    <div class="general-grid-container ">
+        {% block content %}{% endblock %}
+    </div>
+</section>
+
+<script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='sort-table.js') }}"></script>
+{% block script %}{% endblock %}
+</body>
+</html>

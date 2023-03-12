@@ -2,7 +2,11 @@
 
 
 {% block title %} 
-	Home page 
+	Index 
+{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block content %}
@@ -36,22 +40,58 @@
 								firstname = task.FIRSTNAME, 
 								lastname = task.LASTNAME,
 								quantity = task.QUANTITY,
-								unit = task.UNIT
+								unit = task.UNIT,
+								dailyid = task.ROWID
 								%}
 								{% include "card.html" %}
 							{% endwith %}
 						{% endfor %}
 					</div>
-					<p class="lead">
-						<a class="btn bg-primary btn-lg m-4 mt-5 py-2 px-3" href="" role="button"> < Sprawdź uczestników > </a>
-					</p>
 				</div>
 			</div>
 		</div>
 		<!----->
 		{% endfor %}
 	</div>
-{% endblock %}
 </div>
+<!-- modal -->
+<div class="modal fade" id="modal_pop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog text-dark">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel">Lista uczestników</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<table class="table table-bordered" style="overflow-y:scroll" id="tableUsers" CELLPADDING=10>
+			</table>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+<!-- ajax -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.participants').click(function(){
+			$.ajax({
+				url: '/api/daily/user/get',
+				type: 'post',
+				data: {
+					dailyid: $(this).data('dailyid')
+				},
+				success: function(data){
+					$('#tableUsers').html(data);
+					$('#modal_pop').modal('show');
+				}
+			});
+		});
+	});
+
+</script>
+{% endblock %}
 
 

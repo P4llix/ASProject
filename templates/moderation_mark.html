@@ -1,0 +1,177 @@
+{% extends "home_base.html" %}
+
+
+{% block title %} 
+⭐ Mod - mark
+{% endblock %}
+
+
+{% block flashes %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% include "flash.html" %}
+    {% endif %}
+    {% endwith %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="grid-item grid-item-7">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center">
+                    <h3>Ocenianie zadań</h3>
+                </div>
+                <hr>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-2">
+                    <div class="input-group input-group-sm mb-4">
+                        <span class="input-group-text">Data</span>
+                        <input type="date" id='searchDate' class="form-control" aria-label="Sizing example input" aria-describedby="">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <a class="btn btn-primary bg-primary search-date">
+                        Wyświetl
+                    </a>
+                </div>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-12">
+                    <div class='mb-3' id="dates"></div>
+                </div>
+            </div>
+            <div class="row justify-content-left">
+                <div class="col-12">
+                    <div class='mb-3'  id="users"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- user list popup -->
+    <div class="modal fade" id="modal_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog text-dark">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Szczegóły użytkownika</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="userdailyid" style="display:none" value=''>
+                <input type="text" id="useruserid" style="display:none" value=''>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Imię i nazwisko</span>
+                    <input type="text" id='UserName' class="form-control" disabled aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Link</span>
+                    <a href="" target="_blank" id='UserLink'class="form-control" disabled aria-label="Sizing example input"></a>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Ocena</span>
+                    <select class="form-select" id='userMark'>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="input-group input-group-sm mb-4">
+                    <span class="input-group-text">Komentarz</span>
+                    <input type="text" id='UserComment' class="form-control" aria-label="Sizing example input" aria-describedby="firstname" value = ''>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+              <button type="button" class="btn btn-success saveUser" id="">Zapisz</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- ajax -->
+    <script type="text/javascript">
+        function showUsers(id) {
+            $.ajax({
+                url: '/api/mark/get/users',
+                type: 'post',
+                data: {
+                    dailyid: id
+                },
+                success: function(data){
+                    $('#users').html('<hr>');
+                    Array.prototype.forEach.call(data, function(ar) {
+                        $('#users').append('<a class="btn btn-info user-detail mx-1" id="user-detail" onClick="detailUser('+ar[0]+', '+ar[3]+')">'+ar[1]+' '+ar[2]+'</a>');
+                    });
+                }
+            });
+        }
+        function detailUser(userid, dailyid) {
+            $.ajax({
+                url: '/api/mark/get/user',
+                type: 'post',
+                data: {
+                    dailyid: dailyid,
+                    userid: userid
+                },
+                success: function(data){
+                    $('#UserLink').attr('href', data[0]);
+                    $('#UserLink').text(data[0]);
+                    $('#userMark').val(data[1]);
+                    $('#UserComment').val(data[4]);
+                    $('#UserName').val(data[2] + ' ' + data[3]);
+                    $('#userdailyid').val(data[5]);
+                    $('#useruserid').val(data[6]);
+                    $('#modal_user').modal('show');
+                }
+            }); 
+        }
+        $(document).ready(function(){
+            var daily = []
+
+            $('.search-date').click(function(){
+                $.ajax({
+                    url: '/api/mark/get/date',
+                    type: 'post',
+                    data: {
+                        date: $('#searchDate').val()
+                    },
+                    success: function(data){
+                        $('#dates').html('');
+                        $('#users').html('');
+                        Array.prototype.forEach.call(data, function(ar) {
+                            $('#dates').append('<a class="btn btn-primary bg-primary mx-1 daily-detail" onClick="showUsers('+ar[4]+')" data-dailyid='+ar[0]+'>'+ar[1]+' '+ar[2]+' ['+ar[3]+']</a>');
+                        });
+                    }
+                });
+            });
+
+
+            $('.saveUser').click(function(){
+                $.ajax({
+                    url: '/api/mark/update/user',
+                    type: 'post',
+                    data: {
+                        mark: $('#userMark').val(),
+                        comment: $('#UserComment').val(),
+                        dailyid: $('#userdailyid').val(),
+                        userid: $('#useruserid').val()
+                    },
+                    success: function(data){
+                        $('#UserLink').attr('href', '');
+                        $('#UserLink').text('');
+                        $('#userMark').val(0);
+                        $('#UserComment').val('');
+                        $('#UserName').val('');
+                        $('#userdailyid').val(''),
+                        $('#useruserid').val('')
+                        $('#modal_user').modal('hide');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
